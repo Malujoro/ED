@@ -29,22 +29,6 @@ void excluirPilha(Pilha *pilha)
     pilha->tamanho = -1;
 }
 
-// int estaCheia(Pilha pilha)
-// {
-//     if(pilha.tamanho == MAX)
-//         return true;
-
-//     return false;
-// }
-
-// int estaVazia(Pilha pilha)
-// {
-//     if(pilha.tamanho == 0)
-//         return true;
-
-//     return false;
-// }
-
 int estaCheia(Pilha pilha)
 {
     return(pilha.tamanho == MAX);
@@ -66,18 +50,17 @@ void inserir(Pilha *pilha, TipoItem item)
     }
 }
 
-TipoItem remover(Pilha *pilha)
+int remover(Pilha *pilha, TipoItem *item)
 {
     if(estaVazia(*pilha))
     {
         printf("\nErro! Pilha está vazia\n");
         return 0;
     }
-    else
-    {
-        pilha->tamanho--;
-        return pilha->estrutura[pilha->tamanho];
-    }
+
+    pilha->tamanho--;
+    *item = pilha->estrutura[pilha->tamanho];
+    return 1;
 }
 
 void imprimir(Pilha pilha)
@@ -116,11 +99,11 @@ int main()
                 break;
 
             case 2:
-                item = remover(&pilha1);
-                if(item)
+                if(remover(&pilha1, &item))
                 {
                     printf("\nElemento removido: ");
                     printf(TipoPrint, item);
+                    printf("\n");
                 }
                 break;
 
