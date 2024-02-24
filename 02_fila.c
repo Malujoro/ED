@@ -26,8 +26,8 @@ Fila criarFila()
 void excluirFila(Fila *fila)
 {
     free(fila->estrutura);
-    fila->primeiro = -1;
-    fila->ultimo = -1;
+    fila->primeiro = 0;
+    fila->ultimo = 0;
 }
 
 int estaCheia(Fila fila)
@@ -89,6 +89,7 @@ int main()
         printf("\n[1] - Inserir elemento");
         printf("\n[2] - Remover elemento");
         printf("\n[3] - Exibir Fila");
+        printf("\n[4] - Excluir Fila");
         printf("\n[0] - Sair");
         printf("\nOpção: ");
         scanf(" %d", &op);
@@ -112,6 +113,11 @@ int main()
 
             case 3:
                 imprimir(fila1);
+                break;
+            
+            case 4:
+                printf("\nFila Excluída\n");
+                excluirFila(&fila1);
                 break;
         }
     }while(op != 0);

@@ -26,7 +26,7 @@ void excluirPilha(Pilha *pilha)
 {
     free(pilha->estrutura);
     // *pilha = criarPilha();
-    pilha->tamanho = -1;
+    pilha->tamanho = 0;
 }
 
 int estaCheia(Pilha pilha)
@@ -86,6 +86,7 @@ int main()
         printf("\n[1] - Inserir elemento");
         printf("\n[2] - Remover elemento");
         printf("\n[3] - Exibir Pilha");
+        printf("\n[4] - Excluir Pilha");
         printf("\n[0] - Sair");
         printf("\nOpção: ");
         scanf(" %d", &op);
@@ -109,8 +110,12 @@ int main()
 
             case 3:
                 imprimir(pilha1);
+                break;     
+                  
+            case 4:
+                printf("\nPilha Excluída\n");
+                excluirPilha(&pilha1);
                 break;
-
         }
     }while(op != 0);
     return 0;
