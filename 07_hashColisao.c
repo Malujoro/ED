@@ -74,6 +74,11 @@ void inserir(Hash *hash, Aluno aluno)
     else
     {
         int posicao = funcaoHash(*hash, aluno);
+        
+        // RA maior que 0 pois estamos utilizando -1 para Vazio e -2 para Disponível
+        while(hash->estrutura[posicao].ra > 0)
+            posicao = (posicao+1) % hash->maxPosicoes;
+    
         hash->estrutura[posicao] = aluno;
         hash->quantItens++;
     }
@@ -82,23 +87,36 @@ void inserir(Hash *hash, Aluno aluno)
 void deletar(Hash *hash, Aluno aluno)
 {
     int posicao = funcaoHash(*hash, aluno);
-    if(hash->estrutura[posicao].ra != VAZIO)
+
+    while(hash->estrutura[posicao].ra != VAZIO)
     {
-        hash->estrutura[posicao] = criarAluno();
-        hash->quantItens--;
+        if(hash->estrutura[posicao].ra == aluno.ra)
+        {
+            printf("\nElemento removido\n");
+            hash->estrutura[posicao].nome[0] = ' ';
+            hash->estrutura[posicao].ra = DISPONIVEL;
+            hash->quantItens--;
+            return;
+        }
+        posicao = (posicao+1) % hash->maxPosicoes;
     }
+    printf("\nElemento não encontrado\n");
+    printf("\nNenhum elemento foi removido\n");
 }
 
 int buscar(Hash hash, Aluno *aluno)
 {
     int posicao = funcaoHash(hash, *aluno);
 
-    if(hash.estrutura[posicao].ra == aluno->ra)
+    while(hash.estrutura[posicao].ra != VAZIO)
     {
-        *aluno = hash.estrutura[posicao];
-        return 1;
+        if(hash.estrutura[posicao].ra == aluno->ra)
+        {
+            *aluno = hash.estrutura[posicao];
+            return 1;
+        }
+        posicao = (posicao+1) % hash.maxPosicoes;
     }
-
     return 0;
 }
 
@@ -107,7 +125,8 @@ void imprimir(Hash hash)
     printf("\nTabela Hash: \n");
     for(int i = 0; i < hash.maxPosicoes; i++)
     {
-        if(hash.estrutura[i].ra != VAZIO)
+        // RA maior que 0 pois estamos utilizando -1 para Vazio e -2 para Disponível
+        if(hash.estrutura[i].ra > 0)
         {
             printf("\n-----%dº-----", i);
             printf("\nRA: %d", hash.estrutura[i].ra);
