@@ -38,6 +38,13 @@ No *criarNo()
     return no;
 }
 
+ArvoreBinariaBusca criarArvore()
+{
+    ArvoreBinariaBusca arvore;
+    arvore.raiz = criarNo();
+    return arvore;
+}
+
 void deletarArvore(No *noAtual)
 {
 
@@ -61,17 +68,94 @@ int estaCheia()
 
 void inserir(ArvoreBinariaBusca *arvore, Aluno aluno)
 {
+    if(estaCheia())
+        printf("\nErro! A árvore está cheia\n");
+    else
+    {
+        No *noNovo = criarNo();
+        noNovo->aluno = aluno;
 
+        if(arvore->raiz == NULL)
+            arvore->raiz = noNovo;
+        else
+        {
+            No *aux = arvore->raiz;
+            while(aux != NULL)
+            {
+                if(aluno.ra < aux->aluno.ra)
+                {
+                    if(aux->filhoEsquerda == NULL)
+                    {
+                        aux->filhoEsquerda = noNovo;
+                        return;
+                    }
+                    else
+                        aux = aux->filhoEsquerda;
+                }
+                else if(aluno.ra >= aux->aluno.ra)
+                {
+                    if(aux->filhoDireita == NULL)
+                    {
+                        aux->filhoDireita = noNovo;
+                        return;
+                    }
+                    else
+                        aux = aux->filhoDireita;
+                }
+            }
+        }
+    }
 }
 
 void remover(ArvoreBinariaBusca *arvore, Aluno aluno)
 {
-    
+    if(estaVazia(*arvore))
+        printf("\nErro! A árvore está vazia\n");
+    else
+    {
+        No *aux = arvore->raiz;
+
+        while(aux->aluno.ra != VAZIO && aux->aluno.ra != aluno.ra)
+        {
+            if(aluno.ra < aux->aluno.ra)
+                aux = aux->filhoEsquerda;
+            else if(aluno.ra >= aux->aluno.ra)
+                aux = aux->filhoDireita;
+        }
+        if(aux->aluno.ra == VAZIO)
+            printf("\nErro! Elemento não encontrado\n");
+        else
+        {
+
+        }
+    }
 }
 
 int buscar(ArvoreBinariaBusca *arvore, Aluno *aluno)
 {
+    No *aux = arvore->raiz;
+    
+    while(aux->aluno.ra != aluno->ra)
+    {
+        
+        if(aluno->ra < aux->aluno.ra)
+        {
+            if(aux->filhoEsquerda == NULL)
+                return 0;
+            else
+                aux = aux->filhoEsquerda;
+        }
+        else if(aluno->ra >= aux->aluno.ra)
+        {
+            if(aux->filhoDireita == NULL)
+                return 0;
+            else
+                aux = aux->filhoDireita;
+        }
+    }
 
+    *aluno = aux->aluno;
+    return 1;
 }
 
 void imprimirPreOrdem(No *noAtual)
@@ -91,7 +175,7 @@ void imprimirPosOrdem(No *noAtual)
 
 int main()
 {
-    ArvoreBinariaBusca arvore;
+    ArvoreBinariaBusca arvore = criarArvore();
 
     return 0;
 }
