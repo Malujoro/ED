@@ -43,18 +43,24 @@ No *criarNo()
 ArvoreBinariaBusca criarArvore()
 {
     ArvoreBinariaBusca arvore;
-    arvore.raiz = criarNo();
+    arvore.raiz = NULL;
     return arvore;
-}
+} 
 
 void deletarArvore(No *noAtual)
 {
-
+    if(noAtual != NULL)
+    {
+        deletarArvore(noAtual->filhoEsquerda);
+        deletarArvore(noAtual->filhoDireita);
+        
+        free(noAtual);
+    }
 }
 
 int estaVazia(ArvoreBinariaBusca arvore)
 {
-    return (arvore.raiz == VAZIO);
+    return (arvore.raiz == NULL);
 }
 
 int estaCheia()
@@ -140,21 +146,24 @@ void deletarNo(No **noAtual)
     {
         Aluno alunoSucessor = obterSucessor(*noAtual);
         (*noAtual)->aluno = alunoSucessor;
-        removerBusca(alunoSucessor, (*noAtual)->filhoDireita);
+        removerBusca(alunoSucessor, &(*noAtual)->filhoDireita);
     }
 
 }
 
 int removerBusca(Aluno aluno, No **noAtual)
 {
-    if(aluno.ra < (*noAtual)->aluno.ra)
-        removerBusca(aluno, &((*noAtual)->filhoEsquerda));
-    else if(aluno.ra > (*noAtual)->aluno.ra)
-        removerBusca(aluno, &((*noAtual)->filhoDireita));
-    else
+    if(*noAtual != NULL)
     {
-        deletarNo(noAtual);
-        return 1;
+        if(aluno.ra < (*noAtual)->aluno.ra)
+            removerBusca(aluno, &((*noAtual)->filhoEsquerda));
+        else if(aluno.ra > (*noAtual)->aluno.ra)
+            removerBusca(aluno, &((*noAtual)->filhoDireita));
+        else
+        {
+            deletarNo(noAtual);
+            return 1;
+        }
     }
     return 0;
 }
@@ -165,9 +174,8 @@ void remover(ArvoreBinariaBusca *arvore, Aluno aluno)
         printf("\nErro! A árvore está vazia\n");
     else
     {
-        No *raiz = arvore->raiz;
-        if(removerBusca(aluno, &raiz))
-            deletarNo(&raiz);
+        if(removerBusca(aluno, &(arvore->raiz)))
+            printf("\nElemento removido!\n");
         else
             printf("\nElemento não encontrado\n");
     }
@@ -195,22 +203,102 @@ int buscar(ArvoreBinariaBusca *arvore, Aluno *aluno)
 
 void imprimirPreOrdem(No *noAtual)
 {
+    if(noAtual != NULL)
+    {
+        printf("\n%s : %d\n", noAtual->aluno.nome, noAtual->aluno.ra);
 
+        imprimirPreOrdem(noAtual->filhoEsquerda);
+        imprimirPreOrdem(noAtual->filhoDireita);
+    }
 }
 
 void imprimirEmOrdem(No *noAtual)
 {
+    if(noAtual != NULL)
+    {
+        imprimirEmOrdem(noAtual->filhoEsquerda);
 
+        printf("\n%s : %d\n", noAtual->aluno.nome, noAtual->aluno.ra);
+
+        imprimirEmOrdem(noAtual->filhoDireita);
+    }
 }
 
 void imprimirPosOrdem(No *noAtual)
 {
+    if(noAtual != NULL)
+    {
+        imprimirPosOrdem(noAtual->filhoEsquerda);
+        imprimirPosOrdem(noAtual->filhoDireita);
+        
+        printf("\n%s : %d\n", noAtual->aluno.nome, noAtual->aluno.ra);
+    }
+}
 
+void leiaRA(char *texto, int *dado)
+{
+    printf("%s", texto);
+    scanf(" %d", dado);
 }
 
 int main()
 {
     ArvoreBinariaBusca arvore = criarArvore();
+    Aluno aluno;
+    int op;
+
+    do
+    {
+        printf("\nMenu");
+        printf("\n[1] - Inserir aluno");
+        printf("\n[2] - Buscar aluno");
+        printf("\n[3] - Remover aluno");
+        printf("\n[4] - Imprimir alunos em pré ordem");
+        printf("\n[5] - Imprimir alunos em ordem");
+        printf("\n[6] - Imprimir alunos em pós ordem");
+        printf("\n[7] - Recriar árvore");
+        printf("\n[0] - Sair");
+        printf("\nOpção: ");
+        scanf(" %d", &op);
+
+        switch(op)
+        {
+            case 1:
+                leiaRA("\nRA: ", &aluno.ra);
+                printf("\nNome: ");
+                scanf(" %[^\n]s", aluno.nome);
+                inserir(&arvore, aluno);
+                break;
+            case 2:
+                leiaRA("\nRA do aluno a ser buscado: ", &aluno.ra);
+                if(buscar(&arvore, &aluno))
+                {
+                    printf("\nAluno encontrado: ");
+                    printf("\nRA: %d", aluno.ra);
+                    printf("\nNome: %s\n", aluno.nome);
+                }
+                else
+                    printf("\nAluno NÃO encontrado\n");
+                break;
+            case 3:
+                leiaRA("\nRA do aluno a ser removido: ", &aluno.ra);
+                remover(&arvore, aluno);
+                break;
+            case 4:
+                imprimirPreOrdem(arvore.raiz);
+                break;
+            case 5:
+                imprimirEmOrdem(arvore.raiz);
+                break;
+            case 6:
+                imprimirPosOrdem(arvore.raiz);
+                break;
+            case 7:
+                deletarArvore(arvore.raiz);
+                arvore = criarArvore();
+                break;
+        }
+    }while(op != 0);
 
     return 0;
 }
