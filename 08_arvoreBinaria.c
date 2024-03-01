@@ -21,7 +21,7 @@ typedef struct
     No *raiz;
 } ArvoreBinariaBusca;
 
-int removerBusca(Aluno aluno, No **noAtual);
+void removerBusca(Aluno aluno, No **noAtual);
 
 Aluno criarAluno()
 {
@@ -151,7 +151,7 @@ void deletarNo(No **noAtual)
 
 }
 
-int removerBusca(Aluno aluno, No **noAtual)
+void removerBusca(Aluno aluno, No **noAtual)
 {
     if(*noAtual != NULL)
     {
@@ -160,12 +160,8 @@ int removerBusca(Aluno aluno, No **noAtual)
         else if(aluno.ra > (*noAtual)->aluno.ra)
             removerBusca(aluno, &((*noAtual)->filhoDireita));
         else
-        {
             deletarNo(noAtual);
-            return 1;
-        }
     }
-    return 0;
 }
 
 void remover(ArvoreBinariaBusca *arvore, Aluno aluno)
@@ -173,12 +169,7 @@ void remover(ArvoreBinariaBusca *arvore, Aluno aluno)
     if(estaVazia(*arvore))
         printf("\nErro! A árvore está vazia\n");
     else
-    {
-        if(removerBusca(aluno, &(arvore->raiz)))
-            printf("\nElemento removido!\n");
-        else
-            printf("\nElemento não encontrado\n");
-    }
+        removerBusca(aluno, &(arvore->raiz));
 }
 
 int buscar(ArvoreBinariaBusca *arvore, Aluno *aluno)
