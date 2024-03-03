@@ -7,14 +7,14 @@
 #define TipoPrint "%s"
 #define ERRO -1
 
-typedef char TipoItem;
+typedef char *TipoItem;
 
 typedef struct
 {
     int arestaNula;
     int maxVertices;
     int numVertices;
-    TipoItem **vertices;
+    TipoItem *vertices;
     int **matrizAdjacencias;
 } Grafo;
 
@@ -25,9 +25,9 @@ Grafo criarGrafo(int maxVertices, int arestaNula)
     grafo.maxVertices = maxVertices;
     grafo.numVertices = 0;
 
-    grafo.vertices = malloc(maxVertices * sizeof(TipoItem *));
+    grafo.vertices = malloc(maxVertices * sizeof(TipoItem));
     for(int i = 0; i < maxVertices; i++)
-        grafo.vertices[i] = (TipoItem *) malloc(maxVertices * sizeof(TipoItem));
+        grafo.vertices[i] = (TipoItem) malloc(maxVertices * sizeof(char));
 
     grafo.matrizAdjacencias = (int **) malloc(maxVertices * sizeof(int *));
     for(int i = 0; i < maxVertices; i++)
@@ -56,7 +56,7 @@ void excluirGrafo(Grafo *grafo)
     grafo->numVertices = 0;
 }
 
-int obterIndice(Grafo grafo, TipoItem *item)
+int obterIndice(Grafo grafo, TipoItem item)
 {
     for(int i = 0; i < grafo.numVertices; i++)
     {
@@ -71,7 +71,7 @@ int estaCheio(Grafo grafo)
     return (grafo.numVertices == grafo.maxVertices);
 }
 
-void inserirVertice(Grafo *grafo, TipoItem *item)
+void inserirVertice(Grafo *grafo, TipoItem item)
 {
     if(estaCheio(*grafo))
         printf("\nErro! Máximo de vértices atingido\n");
@@ -82,7 +82,7 @@ void inserirVertice(Grafo *grafo, TipoItem *item)
     }
 }
 
-void inserirAresta(Grafo *grafo, TipoItem *noSaida, TipoItem *noEntrada, int peso)
+void inserirAresta(Grafo *grafo, TipoItem noSaida, TipoItem noEntrada, int peso)
 {
     int i = obterIndice(*grafo, noSaida);
     int j = obterIndice(*grafo, noEntrada);
@@ -96,7 +96,7 @@ void inserirAresta(Grafo *grafo, TipoItem *noSaida, TipoItem *noEntrada, int pes
         printf("\nErro! Vértice inválido\n");
 }
 
-int obterPeso(Grafo grafo, TipoItem *noSaida, TipoItem *noEntrada)
+int obterPeso(Grafo grafo, TipoItem noSaida, TipoItem noEntrada)
 {
     int i = obterIndice(grafo, noSaida);
     int j = obterIndice(grafo, noEntrada);
@@ -108,7 +108,7 @@ int obterPeso(Grafo grafo, TipoItem *noSaida, TipoItem *noEntrada)
     return ERRO;
 }
 
-int obterGrau(Grafo grafo, TipoItem *item)
+int obterGrau(Grafo grafo, TipoItem item)
 {
     int pos = obterIndice(grafo, item);
     
@@ -164,8 +164,8 @@ int main()
 
     Grafo grafo = criarGrafo(max, nulo);
     int op, num;
-    TipoItem vertice[100];
-    TipoItem vertice2[100];
+    char vertice[100];
+    char vertice2[100];
     
     do
     {
